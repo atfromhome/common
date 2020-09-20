@@ -7,7 +7,6 @@ namespace FromHome\Common\Abstracts;
 use RuntimeException;
 use Ramsey\Uuid\UuidInterface;
 use FromHome\Common\Model\ModelInterface;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Events\Dispatcher;
 use FromHome\Common\Concerns\ApplicationAware;
 use FromHome\Common\Model\ApplicationAwareInterface;
@@ -17,20 +16,20 @@ abstract class EloquentRepository extends Repository implements ApplicationAware
 {
     use ApplicationAware;
 
-    protected Builder $query;
+    protected Model $model;
 
     public function __construct(Model $model, Dispatcher $event)
     {
         parent::__construct($event);
 
-        $this->query = $model->newQuery();
+        $this->model = $model;
     }
 
     public function findUsingId(UuidInterface $uuid)
     {
         try {
             /** @var Model $model */
-            return $this->query->findOrFail(
+            return $this->model->newQuery()->findOrFail(
                 $uuid->toString()
             );
         } catch (ModelNotFoundException $exception) {
@@ -42,7 +41,7 @@ abstract class EloquentRepository extends Repository implements ApplicationAware
     {
         try {
             /** @var Model $model */
-            return $this->query->where($column, $value)->firstOrFail();
+            return $this->model->newQuery()->where($column, $value)->firstOrFail();
         } catch (ModelNotFoundException $exception) {
             return null;
         }
@@ -52,7 +51,7 @@ abstract class EloquentRepository extends Repository implements ApplicationAware
     {
         try {
             /** @var Model $model */
-            return $this->query->where($columns)->firstOrFail();
+            return $this->model->newQuery()->where($columns)->firstOrFail();
         } catch (ModelNotFoundException $exception) {
             return null;
         }
@@ -60,12 +59,12 @@ abstract class EloquentRepository extends Repository implements ApplicationAware
 
     public function findUsingColumn(string $column, $value)
     {
-        return $this->query->where($column, $value)->get();
+        return $this->model->newQuery()->where($column, $value)->get();
     }
 
     public function findUsingColumns(array $columns)
     {
-        return $this->query->where($columns)->get();
+        return $this->model->newQuery()->where($columns)->get();
     }
 
     protected function save(ModelInterface $model): ModelInterface
