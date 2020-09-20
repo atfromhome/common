@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace FromHome\Common\Tests\Unit\Concerns;
 
@@ -10,7 +12,7 @@ use Illuminate\Contracts\Foundation\Application;
 
 final class ApplicationAwareTest extends TestCase
 {
-    public function testItCanReturnApplication()
+    public function testItCanReturnApplication(): void
     {
         $class = new class() {
             use ApplicationAware;
@@ -22,7 +24,7 @@ final class ApplicationAwareTest extends TestCase
         $this->assertSame($app, $class->getApplication());
     }
 
-    public function testItCanReturnContainerSameAsApplication()
+    public function testItCanReturnContainerSameAsApplication(): void
     {
         $class = new class() {
             use ApplicationAware;
@@ -35,7 +37,7 @@ final class ApplicationAwareTest extends TestCase
         $this->assertSame($class->getApplication(), $class->getContainer());
     }
 
-    public function testItCanReturnContainerSameAsApplicationWhenContainerSet()
+    public function testItCanReturnContainerSameAsApplicationWhenContainerSet(): void
     {
         $class = new class() {
             use ApplicationAware;
@@ -48,7 +50,7 @@ final class ApplicationAwareTest extends TestCase
         $this->assertSame($class->getApplication(), $class->getContainer());
     }
 
-    public function testItCanReturnContainer()
+    public function testItCanReturnContainer(): void
     {
         $class = new class() {
             use ApplicationAware;
